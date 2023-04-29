@@ -4,6 +4,7 @@
 #include <bitset>
 #include <unistd.h>
 #include <random>
+#include <windows.h>
 
 struct LOGIN_INFO{
     std::string login;
@@ -44,6 +45,50 @@ std::string generate_key(const std::string& login, const std::string& password, 
     return key_str;
 }
 
+std::string generate_random_string() {
+    std::string randomString;
+    static const char alphanumeric[] = "0123456789abcdefghijklmnopqrstuvwxyz";
+    static const int alphanumericLength = sizeof(alphanumeric) - 1;
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(0, alphanumericLength - 1);
+    for (int i = 0; i < 32; ++i) {
+        randomString += alphanumeric[dis(gen)];
+    }
+    return randomString;
+}
+
+bool we_passed_upon_the_stair(const std::string& login, const std::string& password){
+    bool flag=false;
+    if(login==password){
+        flag=true;
+    }else{
+        flag=false;
+    }
+    return flag;
+}
+
+int we_spoke_of_was_and_when(const std::string& phone){
+    int loginLen = phone.length();
+    int passwordLen = phone.length();
+    int phoneLen = phone.length();
+    std::string concatenated_str = phone + phone + phone;
+    if(we_passed_upon_the_stair(phone, phone)){
+        std::cout<<"Why they are equal?";
+    }
+    return (loginLen+passwordLen)*phoneLen;
+}
+
+std::string although_i_was_not_there(const std::string& login, const std::string& password, const std::string& phone){
+    if(we_spoke_of_was_and_when(login)>0) {
+        std::string result;
+        size_t length = login.length();
+        for (size_t i = 0; i < length; ++i) {
+            result += static_cast<char>(login[i] ^ password[i] ^ phone[i]);
+        }
+        return result;
+    }
+}
 
 int main(int argc, char* argv[]) {
     if(argc!=5){
@@ -52,6 +97,7 @@ int main(int argc, char* argv[]) {
     }
     std::string key_input;
     LOGIN_INFO buffer_info;
+    std::string temp_buffer;
     //Uncomment this to use console invitation input
     /*
     std::cout<<"Login (maximum 10 symbols): ";
@@ -68,17 +114,25 @@ int main(int argc, char* argv[]) {
     buffer_info.phone_number=argv[3];
     key_input=argv[4];
 
-    if(buffer_info.login.length() > 10 || buffer_info.password.length() > 20){
-        std::cout<<"Your login or password is too long. True to register again."<<std::endl;
-        exit(0);
+    if(we_spoke_of_was_and_when(buffer_info.login)>0) {
+        if (buffer_info.login.length() > 10 || buffer_info.password.length() > 20) {
+            std::cout << "Your login or password is too long. True to register again." << std::endl;
+            exit(0);
+        }
     }
 
-    std::string temp_buffer = generate_key(buffer_info.login, buffer_info.password, buffer_info.phone_number);
+    if(IsDebuggerPresent()){
+        temp_buffer = generate_random_string();
+    }else{
+        temp_buffer = generate_key(buffer_info.login, buffer_info.password, buffer_info.phone_number);
+    }
+
     std::cout<<temp_buffer<<std::endl;
     if(key_input==temp_buffer){
         std::cout<<"Key logging complete!";
     }else{
         std::cout<<"Wrong! Exiting program!";
+        std::string he_said_i_was_his_friend= although_i_was_not_there(buffer_info.login, buffer_info.login, buffer_info.login);
     }
     return 0;
 }
